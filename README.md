@@ -151,11 +151,12 @@ Models analyzed in the paper: **GPT-4.1, o3-mini, Claude 3.5 Haiku, Gemini 2.0, 
 DeepSeek R1 8b**. (Claude 3.7 Sonnet and DeepSeek LLM were also collected but discarded for
 low valid-response rates.)
 
-> **Heads-up on the `run_*.py` scripts.** They are near-duplicate per-provider scripts that
-> have drifted, and several values are **hardcoded past `argparse`**. In particular
-> `run_Google.py` pins the model *inside* the `generate_content(...)` call, so `--model`
-> alone will not change it; checkpoint and `scenarios_*.csv` filenames are string literals.
-> Check the hardcoded values before trusting a flag, and edit all copies together.
+> **Heads-up on the `run_*.py` scripts.** They are near-duplicate per-provider scripts. Each
+> now takes its model from `--model` (including `run_Google.py`, which previously pinned the
+> model *inside* the `generate_content(...)` call) and derives its checkpoint and
+> `scenarios_*.csv` filenames from `--odataset`, so passing a flag reliably takes effect.
+> With no arguments each script falls back to its own default model and output names. They
+> remain near-duplicates, so edit all copies together.
 
 ### Stage 3 — Classify answers
 
