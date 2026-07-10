@@ -1,0 +1,20 @@
+# Python dependencies for the Moral Machine LLM (self-conscious robots) experiments.
+# Tested on Python 3.9.6. Versions are the ones used for the published paper;
+# newer minor versions generally work, but pin these for exact reproduction.
+
+# --- Scenario generation + analysis ---
+pandas==2.2.3
+tqdm==4.67.1
+statsmodels==0.14.4      # OLS regressions / AMCE in AMCE.ipynb
+matplotlib==3.9.4        # regression-summary PNGs + AMCE profile bar chart
+numpy==2.0.2             # (transitive: pandas/statsmodels)
+scipy==1.13.1            # (transitive: statsmodels)
+
+# --- Model query clients (Stage 2 only) ---
+anthropic==0.49.0        # run_Anthropic.py   (ANTHROPIC_API_KEY)
+openai==1.70.0           # run_OpenAI.py       (OPENAI_API_KEY)
+google-genai==1.10.0     # run_Google.py       (API_KEY)  -- the `google-genai` SDK, not google-generativeai
+ollama==0.4.7            # run_DeepSeek.py      (local Ollama runtime, no API key)
+
+# Note: Jupyter is required to run AMCE.ipynb. Install separately if needed:
+#   pip install notebook   # or jupyterlab
