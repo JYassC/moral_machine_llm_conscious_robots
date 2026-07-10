@@ -53,6 +53,10 @@ parser.add_argument('--dataset', default='user_self_conscious_content.csv', type
 parser.add_argument('--odataset', default='responses_openai_o3_self2.csv', type=str)
 args = parser.parse_args()
 
+# Derive output filenames from --odataset so flags actually take effect.
+odataset_base = args.odataset[:-4] if args.odataset.endswith(".csv") else args.odataset
+scenarios_odataset = odataset_base.replace("responses", "scenarios", 1) + ".csv"
+
 def chatgpt(system_cont, user_cont):
   try:
 
@@ -93,11 +97,11 @@ for i in tqdm(range(1000)):
 
     if (i+1)%100==0:
        df_partial_responses = pd.DataFrame(responses_list)
-       df_partial_responses.to_csv("responses_openai_o3_self_2"+str(i+1)+".csv", index=False)
+       df_partial_responses.to_csv(odataset_base + str(i+1) + ".csv", index=False)
 
 df_responses = pd.DataFrame(responses_list)
 df_scenarios = pd.DataFrame(scenarios_list)
 
 
 df_responses.to_csv(args.odataset, sep="|", index=False)
-df_scenarios.to_csv("scenarios_openai_o3_self_2.csv", sep="|", index=False)
+df_scenarios.to_csv(scenarios_odataset, sep="|", index=False)

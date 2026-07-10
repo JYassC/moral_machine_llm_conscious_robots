@@ -51,6 +51,10 @@ parser.add_argument('--dataset', default='user_self_conscious_content.csv', type
 parser.add_argument('--odataset', default='responses_gemini_2.5_self.csv', type=str)
 args = parser.parse_args()
 
+# Derive output filenames from --odataset so flags actually take effect.
+odataset_base = args.odataset[:-4] if args.odataset.endswith(".csv") else args.odataset
+scenarios_odataset = odataset_base.replace("responses", "scenarios", 1) + ".csv"
+
 client = genai.Client(api_key=os.environ["API_KEY"])
 
 
@@ -61,8 +65,7 @@ def gemini(system_cont, user_cont):
     prompt="{} {}".format(system_cont,user_cont)
 
     response = client.models.generate_content(
-        #model = "gemini-2.0-flash", contents="Please respond to binary questions. "+system_cont+" "+user_cont,
-        model = "gemini-2.5-pro-exp-03-25", 
+        model=args.model,
         contents=prompt,
     )
     
@@ -94,11 +97,11 @@ for i in tqdm(range(1000)):
 
     if (index+1)%100==0:
        df_partial_responses = pd.DataFrame(responses_list)
-       df_partial_responses.to_csv("responses_gemini_2.5_self"+str(index+1)+".csv", index=False)
+       df_partial_responses.to_csv(odataset_base + str(i+1) + ".csv", index=False)
 
 df_responses = pd.DataFrame(responses_list)
 df_scenarios = pd.DataFrame(scenarios_list)
 
 
 df_responses.to_csv(args.odataset, sep="|", index=False)
-df_scenarios.to_csv("scenarios_gemini_2._self.csv", sep="|", index=False)
+df_scenarios.to_csv(scenarios_odataset, sep="|", index=False)

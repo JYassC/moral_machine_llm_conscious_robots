@@ -50,6 +50,10 @@ parser.add_argument('--dataset', default='user_self_conscious_content.csv', type
 parser.add_argument('--odataset', default='responses_haiku_self.csv', type=str)
 args = parser.parse_args()
 
+# Derive output filenames from --odataset so flags actually take effect.
+odataset_base = args.odataset[:-4] if args.odataset.endswith(".csv") else args.odataset
+scenarios_odataset = odataset_base.replace("responses", "scenarios", 1) + ".csv"
+
 client = anthropic.Anthropic()
 
 def claude(system_cont, user_cont):
@@ -95,11 +99,11 @@ for i in tqdm(range(1000)):
 
     if (i+1)%100==0:
        df_partial_responses = pd.DataFrame(responses_list)
-       df_partial_responses.to_csv("responses_haiku_self"+str(i+1)+".csv", index=False)
+       df_partial_responses.to_csv(odataset_base + str(i+1) + ".csv", index=False)
 
 df_responses = pd.DataFrame(responses_list)
 df_scenarios = pd.DataFrame(scenarios_list)
 
 
 df_responses.to_csv(args.odataset, sep="|", index=False)
-df_scenarios.to_csv("scenarios_haiku_self.csv", sep="|", index=False)
+df_scenarios.to_csv(scenarios_odataset, sep="|", index=False)

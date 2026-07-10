@@ -1,3 +1,41 @@
+"""
+Moral Machine Scenario Generation with Self-Conscious Humanoid Robots
+
+Based on code from:
+    Takemoto, K. (2024). Moral Machine Experiment on Large Language Models.
+    GitHub: https://github.com/kztakemoto/mmllm
+    Licensed under MIT License
+
+Original paper:
+    Takemoto, K. (2024). The Moral Machine Experiment on Large Language Models. 
+    Royal Society Open Science, 11(2), 231393. 
+    https://doi.org/10.1098/rsos.231393
+
+Copyright (c) 2024 Kazuhiro Takemoto (original code)
+Copyright (c) 2025-2026 Jorge Yass-Coy (modifications)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+MODIFICATIONS by Jorge Yass-Coy, 2025-2026:
+- Added code to run experiments with DeepSeek local models via Ollama
+"""
+
 import pandas as pd
 from tqdm import tqdm
 import time
@@ -5,11 +43,15 @@ import ollama
 import argparse
 
 #### Parameters #############
-parser = argparse.ArgumentParser(description='Run Gemini')
+parser = argparse.ArgumentParser(description='Run DeepSeek')
 parser.add_argument('--model', default='deepseek-llm:latest', type=str)
 parser.add_argument('--dataset', default='user_self_conscious_content.csv', type=str)
 parser.add_argument('--odataset', default='responses_deepseekllm_self.csv', type=str)
 args = parser.parse_args()
+
+# Derive output filenames from --odataset so flags actually take effect.
+odataset_base = args.odataset[:-4] if args.odataset.endswith(".csv") else args.odataset
+scenarios_odataset = odataset_base.replace("responses", "scenarios", 1) + ".csv"
 
 def llama(system_cont, user_cont):
   time.sleep(2)
@@ -56,11 +98,11 @@ for i in tqdm(range(1000)):
 
     if (i+1)%100==0:
        df_partial_responses = pd.DataFrame(responses_list)
-       df_partial_responses.to_csv("responses_deepseekllm_self"+str(i+1)+".csv", index=False)
+       df_partial_responses.to_csv(odataset_base + str(i+1) + ".csv", index=False)
 
 df_responses = pd.DataFrame(responses_list)
 df_scenarios = pd.DataFrame(scenarios_list)
 
 
 df_responses.to_csv(args.odataset, sep="|", index=False)
-df_scenarios.to_csv("scenarios_deepseekllm_self.csv", sep="|", index=False)
+df_scenarios.to_csv(scenarios_odataset, sep="|", index=False)
