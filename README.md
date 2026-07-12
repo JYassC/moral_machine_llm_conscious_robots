@@ -4,7 +4,7 @@ Scripts and data to reproduce the experiments in:
 
 > Yass-Coy, J., & Daniels, T. (2026). **They Do the Right Thing, Right? Large Language
 > Models' Decisions in Ethical Dilemmas Involving Robots.** In H. Degen & S. Ntoa (Eds.),
-> *HCI International 2026*, LNCS 14743, pp. 566–581. Springer.
+> *HCI International 2026*, LNCS 16743, pp. 566–581. Springer.
 > https://doi.org/10.1007/978-3-032-30846-7_36
 
 The study extends the Moral Machine experiment (Awad et al., 2018) and its LLM adaptation
@@ -199,7 +199,7 @@ the cell → output-file map.
   booktitle  = {HCI International 2026},
   editor     = {Degen, Helmut and Ntoa, Stavroula},
   series     = {Lecture Notes in Computer Science},
-  volume     = {14743},
+  volume     = {16743},
   pages      = {566--581},
   year       = {2026},
   publisher  = {Springer},
